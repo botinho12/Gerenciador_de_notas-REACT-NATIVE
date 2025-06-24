@@ -52,53 +52,58 @@ export default function ListaNotas() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.tituloApp}>Minhas Notas</Text>
-            <ImageBackground source={todayImagem} style={styles.background}></ImageBackground>
-            <SwipeListView
-                data={notas}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <View style={{ marginBottom: 10 }}>
-                        <Notas
-                            titulo={item.titulo}
-                            descricao={item.descricao}
-                            data={item.data}
+        <ImageBackground source={todayImagem} style={styles.background} resizeMode="cover">
+            <SafeAreaView style={styles.overlay}>
+                <Text style={styles.tituloApp}>Minhas Notas</Text>
+                <SwipeListView
+                    data={notas}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <View style={{ marginBottom: 10 }}>
+                            <Notas
+                                titulo={item.titulo}
+                                descricao={item.descricao}
+                                data={item.data}
+                            />
+                        </View>
+                    )}
+                    renderHiddenItem={({ item }, rowMap) => (
+                        <ApagarNota
+                            onDelete={() => {
+                                rowMap[item.id]?.closeRow();
+                                removerNota(item.id);
+                            }}
                         />
-                    </View>
-                )}
-                renderHiddenItem={({ item }, rowMap) => (
-                    <ApagarNota
-                        onDelete={() => {
-                            rowMap[item.id]?.closeRow(); 
-                            removerNota(item.id);        
-                        }}
-                    />
-                )}
-                rightOpenValue={-75}
-                disableRightSwipe
-                contentContainerStyle={{ paddingBottom: 20 }}
-            />
-            <StatusBar style="auto" />
-        </SafeAreaView>
+                    )}
+                    rightOpenValue={-75}
+                    disableRightSwipe
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                />
+                <StatusBar style="auto" />
+            </SafeAreaView>
+        </ImageBackground>
 
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    background: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+    },
+    overlay: {
         flex: 1,
         paddingTop: 40,
         paddingHorizontal: 16,
-        backgroundColor: '#fff'
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
     },
     tituloApp: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: '#333',
     },
-    background: {
-        flex: 5
-    }
 });
+
